@@ -1,12 +1,14 @@
 package server;
 
-import common.Calculator;
+import common.RpcProtocol;
 
-public class CalculatorImpl implements Calculator {
-    private static Calculator INSTANCE;
+public class RpcProtocolImpl implements RpcProtocol {
+    private static RpcProtocol INSTANCE = new RpcProtocolImpl();
 
-    public static Calculator getInstance() {
-        return new CalculatorImpl();
+    private RpcProtocolImpl() {}
+
+    public static RpcProtocol getInstance() {
+        return INSTANCE;
     }
 
     @Override
@@ -23,5 +25,12 @@ public class CalculatorImpl implements Calculator {
         } else {
             throw new IllegalArgumentException("Type " + x.getClass() + " is not supported by this method");
         }
+    }
+
+    @Override
+    public String upperCase(String s) {
+        if (s == null)
+            return null;
+        return s.toUpperCase();
     }
 }

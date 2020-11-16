@@ -22,6 +22,10 @@ public class Response implements Externalizable {
         this.result = result;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
     public String getCallID() {
         return callID;
     }

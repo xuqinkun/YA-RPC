@@ -1,109 +1,85 @@
 package common;
 
-import bean.Response;
-
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.net.Socket;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static bean.Status.ERROR;
-import static bean.Status.OK;
 import static bean.Util.readString;
 import static bean.Util.writeString;
 
 public class Call implements Externalizable {
-    private Class<?> clazz;
+    private String className;
 
-    private Method method;
+    private String methodName;
 
     private List<Object> params;
 
-    private Socket socket;
+    private List<String> types;
 
     public Call() {
     }
 
-    public Call(Class<?> clazz, Method method) {
-        this.clazz = clazz;
-        this.method = method;
-        params = new ArrayList<>();
+    public Call(String className, String methodName) {
+        this.className = className;
+        this.methodName = methodName;
+        this.params = new ArrayList<>();
+        this.types = new ArrayList<>();
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public List<Object> getParams() {
+        return params;
+    }
+
+    public List<String> getTypes() {
+        return types;
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        writeString(out, clazz.getSimpleName());
-        writeString(out, method.getName());
-        int cnt = method.getParameterCount();
+        writeString(out, className);
+        writeString(out, methodName);
+        int cnt = params.size();
         out.writeInt(cnt);
-        Parameter[] parameters = method.getParameters();
         for (int i = 0; i < cnt; i++) {
-            writeString(out, parameters[i].getType().getName());
-            out.writeObject(params.get(i));
+            Object param = params.get(i);
+            writeString(out, types.get(i));
+            out.writeObject(param);
         }
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        String classSimpleName = readString(in);
-        String methodName = readString(in);
+        className = readString(in);
+        methodName = readString(in);
         int cnt = in.readInt();
-        Class<?>[] types = new Class[cnt];
         List<Object> args = new ArrayList<>();
+        types = new ArrayList<>();
         for (int i = 0; i < cnt; i++) {
-            String paramClassName = readString(in);
-            types[i] = Class.forName(paramClassName);
+            types.add(readString(in));
             args.add(in.readObject());
         }
-
-        buildCall(classSimpleName, methodName, types, args);
-    }
-
-    private void buildCall(String classSimpleName, String methodName, Class<?>[] types, List<Object> args)
-            throws ClassNotFoundException {
-        String packageName = getClass().getPackage().getName();
-        String classFullName = String.format("%s.%s", packageName, classSimpleName);
-        clazz = Class.forName(classFullName);
         params = args;
-        try {
-            method = clazz.getMethod(methodName, types);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public ObjectInputStream getInputStream() throws IOException {
-        return new ObjectInputStream(socket.getInputStream());
-    }
-
-    public Response getResponse() {
-        Object ret = null;
-        try {
-            readExternal(getInputStream());
-            Object obj = clazz.newInstance();
-            ret = method.invoke(obj, params.get(0), params.get(1));
-        } catch (IOException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            return new Response(ERROR, "", e.getMessage());
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        }
-        return new Response(OK, "", ret);
-    }
-
-    public void setSocket(Socket socket) {
-        this.socket = socket;
     }
 
     public void addParams(Object... args) {
         params.addAll(Arrays.asList(args));
     }
 
-    public void request() throws IOException {
-        writeExternal(new ObjectOutputStream(socket.getOutputStream()));
+    public void addTypes(Class<?>... types) {
+        for (Class<?> type : types) {
+            this.types.add(type.getName());
+        }
     }
 }
