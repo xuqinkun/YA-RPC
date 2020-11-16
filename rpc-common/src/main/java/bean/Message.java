@@ -1,4 +1,4 @@
-package rpc.bean;
+package bean;
 
 import java.io.*;
 import java.util.ArrayList;

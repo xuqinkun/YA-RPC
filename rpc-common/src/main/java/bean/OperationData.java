@@ -1,4 +1,4 @@
-package rpc.bean;
+package bean;
 
 public class OperationData {
     private String className;

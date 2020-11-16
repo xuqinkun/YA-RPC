@@ -1,4 +1,4 @@
-package rpc.bean;
+package bean;
 
 import java.io.IOException;
 import java.io.ObjectInput;

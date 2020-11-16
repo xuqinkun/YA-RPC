@@ -1,6 +1,6 @@
-package rpc.common;
+package common;
 
-import rpc.bean.Response;
+import bean.Response;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static rpc.bean.Status.ERROR;
-import static rpc.bean.Status.OK;
-import static rpc.bean.Util.readString;
-import static rpc.bean.Util.writeString;
+import static bean.Status.ERROR;
+import static bean.Status.OK;
+import static bean.Util.readString;
+import static bean.Util.writeString;
 
 public class Call implements Externalizable {
     private Class<?> clazz;

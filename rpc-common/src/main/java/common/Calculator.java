@@ -1,4 +1,4 @@
-package rpc.common;
+package common;
 
 public interface Calculator {
 

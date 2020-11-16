@@ -1,8 +1,8 @@
-package rpc.client;
+package client;
 
-import rpc.bean.Response;
-import rpc.common.Calculator;
-import rpc.common.Call;
+import bean.Response;
+import common.Calculator;
+import common.Call;
 
 import java.io.IOException;
 import java.lang.reflect.Method;

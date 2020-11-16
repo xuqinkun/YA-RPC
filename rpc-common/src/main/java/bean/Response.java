@@ -1,12 +1,12 @@
-package rpc.bean;
+package bean;
 
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import static rpc.bean.Util.readString;
-import static rpc.bean.Util.writeString;
+import static bean.Util.readString;
+import static bean.Util.writeString;
 
 public class Response implements Externalizable {
     private Status status;

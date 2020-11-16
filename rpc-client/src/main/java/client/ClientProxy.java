@@ -1,6 +1,6 @@
-package rpc.client;
+package client;
 
-import rpc.common.Call;
+import common.Call;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;

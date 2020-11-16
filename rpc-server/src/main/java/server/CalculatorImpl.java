@@ -1,4 +1,6 @@
-package rpc.common;
+package server;
+
+import common.Calculator;
 
 public class CalculatorImpl implements Calculator {
     private static Calculator INSTANCE;
