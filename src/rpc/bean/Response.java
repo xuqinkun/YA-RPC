@@ -5,27 +5,32 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import static rpc.bean.Util.readString;
+import static rpc.bean.Util.writeString;
+
 public class Response implements Externalizable {
-    private String messageID;
-    private String result;
+    private Status status;
+    private String callID;
+    private Object result;
 
     public Response() {
     }
 
-    public Response(String messageID, String result) {
-        this.messageID = messageID;
+    public Response(Status status,String callID, Object result) {
+        this.status = status;
+        this.callID = callID;
         this.result = result;
     }
 
-    public String getMessageID() {
-        return messageID;
+    public String getCallID() {
+        return callID;
     }
 
-    public void setMessageID(String messageID) {
-        this.messageID = messageID;
+    public void setCallID(String callID) {
+        this.callID = callID;
     }
 
-    public String getResult() {
+    public Object getResult() {
         return result;
     }
 
@@ -40,8 +45,9 @@ public class Response implements Externalizable {
      */
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        Util.writeString(out, messageID);
-        Util.writeString(out, result);
+        writeString(out, status.toString());
+        writeString(out, callID);
+        out.writeObject(result);
     }
 
     /**
@@ -52,15 +58,17 @@ public class Response implements Externalizable {
      */
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        messageID = Util.readString(in);
-        result = Util.readString(in);
+        status = Status.valueOf(readString(in));
+        callID = readString(in);
+        result = in.readObject();
     }
 
     @Override
     public String toString() {
         return "Response{" +
-                "messageID='" + messageID + '\'' +
-                ", result='" + result + '\'' +
+                "status=" + status +
+                ", callID='" + callID + '\'' +
+                ", result=" + result +
                 '}';
     }
 }
