@@ -13,7 +13,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 import static bean.Status.ERROR;
 
-public class Client implements Runnable {
+public class Client {
     private boolean stopped;
 
     private BlockingQueue<Call> callQueue;
@@ -27,24 +27,6 @@ public class Client implements Runnable {
         this.port = port;
         callQueue = new LinkedBlockingDeque<>();
         stopped = false;
-    }
-
-    @Override
-    public void run() {
-        try {
-            Call call;
-            while (!stopped) {
-                call = callQueue.take();
-                Socket socket = new Socket();
-                socket.connect(new InetSocketAddress(host, port));
-                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                call.writeExternal(oos);
-                Response response = new Response();
-                response.readExternal(new ObjectInputStream(socket.getInputStream()));
-            }
-        } catch (IOException | InterruptedException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     public void addCall(Call call) {

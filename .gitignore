@@ -1,4 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 /out
+*.class
 /.idea
 *.iml
+*.jar
+*/target
