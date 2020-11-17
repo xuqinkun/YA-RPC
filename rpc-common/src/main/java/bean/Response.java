@@ -22,6 +22,10 @@ public class Response implements Externalizable {
         this.result = result;
     }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -38,7 +42,7 @@ public class Response implements Externalizable {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(Object result) {
         this.result = result;
     }
 

@@ -1,6 +1,7 @@
 package client;
 
 import bean.Response;
+import bean.Util;
 import common.RpcProtocol;
 import common.Call;
 
@@ -16,6 +17,7 @@ public class RpcProtocolStub implements RpcProtocol {
     @Override
     public Number sum(Number x, Number y) {
         Call call = new Call(getClass().getSimpleName(), "sum");
+        call.setCallID(Util.getUUID());
         call.addTypes(Number.class, Number.class);
         call.addParams(x, y);
         client.addCall(call);
@@ -29,6 +31,7 @@ public class RpcProtocolStub implements RpcProtocol {
     @Override
     public String upperCase(String s) {
         Call call = new Call(getClass().getSimpleName(), "upperCase");
+        call.setCallID(Util.getUUID());
         call.addTypes(String.class);
         call.addParams(s);
         client.addCall(call);

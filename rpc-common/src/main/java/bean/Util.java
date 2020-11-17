@@ -3,6 +3,7 @@ package bean;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.UUID;
 
 public class Util {
 
@@ -24,5 +25,9 @@ public class Util {
         byte[] buffer = new byte[len];
         in.read(buffer);
         return new String(buffer);
+    }
+
+    public static String getUUID() {
+        return UUID.randomUUID().toString();
     }
 }

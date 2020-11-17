@@ -34,7 +34,7 @@ public class Server {
                 call.readExternal(new ObjectInputStream(socket.getInputStream()));
                 response = parseRequest(call);
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-
+                log.info("Call[{}]", call);
                 response.writeExternal(oos);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -54,7 +54,8 @@ public class Server {
 
         String packageName = Server.class.getPackage().getName();
         String classFullName = packageName + "." + className;
-        Response response;
+        Response response = new Response();
+        response.setCallID(call.getCallID());
         try {
             for (int i = 0; i < size; i++) {
                 types[i] = Class.forName(typeNames.get(i));
@@ -64,10 +65,13 @@ public class Server {
             Object obj = clazz.newInstance();
             Method method = clazz.getMethod(methodName, types);
             Object ret = method.invoke(obj, args);
-            response = new Response(OK, "", ret);
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
+            response.setStatus(OK);
+            response.setResult(ret);
+        } catch (Exception e) {
             e.printStackTrace();
-            response = new Response(ERROR, "", e.getMessage());
+            response = new Response(ERROR, call.getCallID(), e.getMessage());
+            response.setStatus(ERROR);
+            response.setResult(e.getMessage());
         }
         return response;
     }

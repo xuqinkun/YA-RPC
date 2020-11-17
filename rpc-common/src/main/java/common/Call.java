@@ -12,6 +12,8 @@ import static bean.Util.readString;
 import static bean.Util.writeString;
 
 public class Call implements Externalizable {
+    private String callID;
+
     private String className;
 
     private String methodName;
@@ -28,6 +30,14 @@ public class Call implements Externalizable {
         this.methodName = methodName;
         this.params = new ArrayList<>();
         this.types = new ArrayList<>();
+    }
+
+    public String getCallID() {
+        return callID;
+    }
+
+    public void setCallID(String callID) {
+        this.callID = callID;
     }
 
     public String getClassName() {
@@ -48,6 +58,7 @@ public class Call implements Externalizable {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        writeString(out, callID);
         writeString(out, className);
         writeString(out, methodName);
         int cnt = params.size();
@@ -61,6 +72,7 @@ public class Call implements Externalizable {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        callID = readString(in);
         className = readString(in);
         methodName = readString(in);
         int cnt = in.readInt();
@@ -81,5 +93,16 @@ public class Call implements Externalizable {
         for (Class<?> type : types) {
             this.types.add(type.getName());
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Call{" +
+                "callID='" + callID + '\'' +
+                ", className='" + className + '\'' +
+                ", methodName='" + methodName + '\'' +
+                ", params=" + params +
+                ", types=" + types +
+                '}';
     }
 }

@@ -14,8 +14,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 import static bean.Status.ERROR;
 
 public class Client {
-    private boolean stopped;
-
     private BlockingQueue<Call> callQueue;
 
     private String host;
@@ -26,7 +24,6 @@ public class Client {
         this.host =host;
         this.port = port;
         callQueue = new LinkedBlockingDeque<>();
-        stopped = false;
     }
 
     public void addCall(Call call) {
@@ -35,18 +32,20 @@ public class Client {
 
     public Response call() {
         Call call;
+        Response response = new Response();
         try {
             call = callQueue.take();
+            response.setCallID(call.getCallID());
             Socket socket = new Socket();
             socket.connect(new InetSocketAddress(host, port));
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             call.writeExternal(oos);
-            Response response = new Response();
             response.readExternal(new ObjectInputStream(socket.getInputStream()));
-            return response;
         } catch (InterruptedException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            return new Response(ERROR, "", e.getMessage());
+            response.setStatus(ERROR);
+            response.setResult(e.getMessage());
         }
+        return response;
     }
 }
