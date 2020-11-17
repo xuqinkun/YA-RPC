@@ -17,11 +17,12 @@ public class RpcProtocolStub implements RpcProtocol {
     private static Logger log = LoggerFactory.getLogger(RpcProtocolStub.class);
 
     public static final String HOST = "127.0.0.1";
+    public static final int PORT = 10000;
 
     private Client client;
 
     public RpcProtocolStub() {
-        client = new Client.ClientFactory(HOST, Server.port).build();
+        client = new Client.ClientFactory(HOST, PORT).build();
     }
 
     @Override
