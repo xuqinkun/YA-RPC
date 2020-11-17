@@ -2,11 +2,10 @@ package client;
 
 import bean.Response;
 import bean.Util;
-import common.RpcProtocol;
 import common.Call;
+import common.RpcProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import server.Server;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -16,13 +15,11 @@ import static bean.Status.OK;
 public class RpcProtocolStub implements RpcProtocol {
     private static Logger log = LoggerFactory.getLogger(RpcProtocolStub.class);
 
-    public static final String HOST = "127.0.0.1";
-    public static final int PORT = 10000;
-
     private Client client;
 
     public RpcProtocolStub() {
-        client = new Client.ClientFactory(HOST, PORT).build();
+        client = new Client.ClientFactory(
+                Util.getServerRemotePort(), Util.getServerBindPort()).build();
     }
 
     @Override
