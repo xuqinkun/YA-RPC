@@ -10,12 +10,14 @@ public class RpcApp {
 
     public static void main(String[] args) {
         RpcProtocol rpc = new RpcProtocolStub();
-        Number sum = rpc.sum(1.0f, 2.0f);
-        log.info("Result={}", sum.toString());
-        sum = rpc.sum(4, 2);
-        log.info("Result={}", sum.toString());
+        Number sum = rpc.sum(1.0f, 0);
+        if (sum != null)
+            log.info("Result={}", sum.toString());
+        sum = rpc.sum(Integer.MAX_VALUE, 1);
+        if (sum != null)
+            log.info("Result={}", sum.toString());
         String ret = rpc.upperCase("abscd");
-        log.info(ret);
-        System.exit(0);
+        if (sum != null)
+            log.info(ret);
     }
 }

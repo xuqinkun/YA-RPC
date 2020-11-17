@@ -4,6 +4,8 @@ import bean.Response;
 import bean.Util;
 import common.RpcProtocol;
 import common.Call;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import server.Server;
 
 import java.util.concurrent.ExecutionException;
@@ -12,13 +14,14 @@ import java.util.concurrent.TimeoutException;
 import static bean.Status.OK;
 
 public class RpcProtocolStub implements RpcProtocol {
+    private static Logger log = LoggerFactory.getLogger(RpcProtocolStub.class);
+
     public static final String HOST = "127.0.0.1";
 
     private Client client;
 
     public RpcProtocolStub() {
         client = new Client.ClientFactory(HOST, Server.port).build();
-        new Thread(client).start();
     }
 
     @Override
@@ -32,10 +35,12 @@ public class RpcProtocolStub implements RpcProtocol {
         try {
             response = client.call(call.getCallID());
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new RuntimeException(e);
+            log.error(e.getMessage());
+            return null;
         }
         if (response.getStatus() != OK) {
-            throw new RuntimeException(response.getResult().toString());
+            log.error("Status: {}, Error:{}", response.getStatus(), response.getResult());
+            return null;
         }
         return (Number) response.getResult();
     }
@@ -51,10 +56,11 @@ public class RpcProtocolStub implements RpcProtocol {
         try {
             response = client.call(call.getCallID());
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new RuntimeException(e);
+            log.error(e.getMessage());
+            return null;
         }
         if (response.getStatus() != OK) {
-            throw new RuntimeException(response.getResult().toString());
+            log.error("Status: {} Error:{}", response.getStatus(), response.getResult());
         }
         return (String) response.getResult();
     }
