@@ -17,9 +17,8 @@ public class RpcProtocolStub implements RpcProtocol {
 
     private Client client;
 
-    public RpcProtocolStub() {
-        client = new Client.ClientFactory(
-                Util.getServerRemotePort(), Util.getServerBindPort()).build();
+    public RpcProtocolStub(String host, int port) {
+        client = new Client.ClientFactory(host, port).build();
     }
 
     @Override

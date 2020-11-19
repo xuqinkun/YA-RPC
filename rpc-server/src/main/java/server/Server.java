@@ -1,9 +1,11 @@
 package server;
 
 import bean.Util;
+import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -43,7 +45,15 @@ public class Server implements Runnable {
     }
 
     public static void main(String[] args) {
-        Server server = new Server(Util.getServerBindHost(), Util.getServerBindPort());
+        CommandLine cmd = Util.getCommandLine(args);
+
+        String h = cmd.getOptionValue("h");
+        String p = cmd.getOptionValue("p");
+
+        String host = h != null ? h : Util.getServerBindHost();
+        int port = p != null ? Integer.parseInt(p) : Util.getServerBindPort();
+
+        Server server = new Server(host, port);
         Thread t = new Thread(server);
         t.start();
         try {
