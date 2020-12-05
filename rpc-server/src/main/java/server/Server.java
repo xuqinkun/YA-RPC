@@ -20,6 +20,8 @@ public class Server implements Runnable {
 
     private int port;
 
+    private boolean stop;
+
     private static final ExecutorService executor = Executors.newCachedThreadPool();
 
     public Server(String host, int port) {
@@ -34,7 +36,7 @@ public class Server implements Runnable {
             server.bind(new InetSocketAddress(host, port));
             log.debug("Server bind to {}:{} success", host, port);
             Socket socket;
-            while ((socket = server.accept()) != null) {
+            while (!stop && (socket = server.accept()) != null) {
                 log.debug("Accept {}", socket.getRemoteSocketAddress());
                 Worker worker = new Worker(socket);
                 executor.submit(worker);
@@ -42,6 +44,11 @@ public class Server implements Runnable {
         } catch (IOException e) {
             log.error("{}", e.getMessage());
         }
+    }
+
+    public void stop() {
+        stop = true;
+        Thread.currentThread().interrupt();
     }
 
     public static void main(String[] args) {

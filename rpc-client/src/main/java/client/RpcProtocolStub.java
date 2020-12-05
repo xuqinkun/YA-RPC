@@ -44,6 +44,9 @@ public class RpcProtocolStub implements RpcProtocol {
 
     @Override
     public String upperCase(String s) {
+        if (s == null || s.isEmpty()) {
+            return s;
+        }
         Call call = new Call(getClass().getSimpleName(), "upperCase");
         call.setCallID(Util.getUUID());
         call.addTypes(String.class);
